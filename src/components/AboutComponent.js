@@ -12,12 +12,16 @@ import { Link } from "react-router-dom";
 function RenderLeader({ leader }) {
   return (
     <Media className="mb-4">
-      <Media
-        className="mr-3 mt-2"
-        object
-        src={leader.image}
-        alt={leader.name}
-      />
+      <Media tag="li">
+        <Media left>
+          <Media
+            className="mr-4 mt-2"
+            object
+            src={leader.image}
+            alt={leader.name}
+          />
+        </Media>
+      </Media>
       <Media body className="text-justify">
         <Media heading>
           <h4 className="mb-1">{leader.name}</h4>

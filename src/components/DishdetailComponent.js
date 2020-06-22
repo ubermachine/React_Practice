@@ -16,6 +16,9 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import { Control, LocalForm, Errors } from "react-redux-form";
+
+
+
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !val || val.length <= len;
 const minLength = (len) => (val) => val && val.length >= len;
@@ -36,8 +39,7 @@ class CommentForm extends Component {
   }
   handleSubmit(values) {
     this.toggleModal();
-    console.log("Current State is: " + JSON.stringify(values));
-    alert("Current State is: " + JSON.stringify(values));
+    this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
   }
   render() {
     return (
@@ -54,7 +56,7 @@ class CommentForm extends Component {
               onSubmit={(values) => this.handleSubmit(values)}
             >
               <Row className="form-group">
-                <Label htmlFor="Yourname">Rating</Label>
+                <Label htmlFor="yourName">Rating</Label>
                 <Control.select
                   model=".contactType"
                   name="contactType"
@@ -69,12 +71,12 @@ class CommentForm extends Component {
               </Row>
 
               <Row className="form-group">
-                <Label htmlFor="yourName">Your Name</Label>
+                <Label htmlFor="author">Your Name</Label>
 
                 <Control.text
-                  model=".yourName"
-                  id="yournNme"
-                  name="yourName"
+                  model=".author"
+                  id="author"
+                  name="author"
                   placeholder="Your Name"
                   className="form-control"
                   validators={{
@@ -85,7 +87,7 @@ class CommentForm extends Component {
                 />
                 <Errors
                   className="text-danger"
-                  model=".yourName"
+                  model=".author"
                   show="touched"
                   messages={{
                     required: "Required",
@@ -137,7 +139,7 @@ function RenderDish({ dish }) {
     </div>
   );
 }
-function RenderComments({ comments }) {
+ function RenderComments({comments, addComment, dishId}) {
   //if (comments != null)
   return (
     <div className="col-12 col-md-5 m-1">
@@ -159,7 +161,7 @@ function RenderComments({ comments }) {
           );
         })}
       </ul>
-      <CommentForm />
+          <CommentForm dishId={dishId} addComment={addComment} />
     </div>
   );
 }
@@ -182,7 +184,10 @@ const DishDetail = (props) => {
           </div>
           <RenderDish dish={props.dish} />
 
-          <RenderComments comments={props.comments} />
+                <RenderComments comments={props.comments}
+        addComment={props.addComment}
+        dishId={props.dish.id}
+      />
         </div>
       </div>
     );

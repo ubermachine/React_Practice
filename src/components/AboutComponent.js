@@ -9,35 +9,51 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 
-function RenderLeader({ leader }) {
-  return (
-    <Media className="mb-4">
-      <Media tag="li">
-        <Media left>
-          <Media
-            className="mr-4 mt-2"
-            object
-            src={leader.image}
-            alt={leader.name}
-          />
+import { Loading } from "./LoadingComponent";
+import { baseUrl } from "../shared/baseUrl";
+
+import { FadeTransform, Fade, Stagger } from "react-animation-components";
+
+function RenderLeader({ leader, isLoading, errMess }) {
+  if (isLoading) {
+    return <Loading />;
+  } else if (errMess) {
+    return <h4>{errMess}</h4>;
+  } else
+    return (
+      <Media className="mb-4">
+        <Media tag="li">
+          <Media left>
+            <Media
+              className="mr-4 mt-2"
+              object
+              src={baseUrl + leader.image}
+              alt={leader.name}
+            />
+          </Media>
+        </Media>
+        <Media body className="text-justify">
+          <Media heading>
+            <h4 className="mb-1">{leader.name}</h4>
+            <h6 className="mt-0"> {leader.designation}</h6>
+          </Media>
+          {leader.description}
         </Media>
       </Media>
-      <Media body className="text-justify">
-        <Media heading>
-          <h4 className="mb-1">{leader.name}</h4>
-          <h6 className="mt-0"> {leader.designation}</h6>
-        </Media>
-        {leader.description}
-      </Media>
-    </Media>
-  );
+    );
 }
 function About(props) {
-  const leaders = props.leaders.map((leader) => {
+  const leaders = props.leaders.leaders.map((leader) => {
     return (
-      <div key={leader.id}>
-        <RenderLeader leader={leader} />
-      </div>
+      <Fade>
+        <div key={leader.id}>
+          <RenderLeader
+            leader={leader}
+            isLoading={props.leadersLoading}
+            errMess={props.leadersErrMess}
+          />
+        </div>
+      </Fade>
     );
   });
 
@@ -117,7 +133,9 @@ function About(props) {
           <h2 className="font-weight-bold">Corporate Leadership</h2>
         </div>
         <div className="col-12">
-          <Media list>{leaders}</Media>
+          <Media list>
+            <Stagger in>{leaders}</Stagger>
+          </Media>
         </div>
       </div>
     </div>
